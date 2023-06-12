@@ -7,6 +7,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth import authenticate, login, logout
 from account.forms import *
 from django.contrib import messages
+from django.http import HttpResponse, JsonResponse
+import json
 
 # Create your views here.
 class MainView(View):
@@ -56,3 +58,37 @@ class DashboardView(MainView):
     def get(self, request, *args, **kwargs):
         
         return render(request, 'pages/dashboard.html')
+    
+class AddCapitalView(MainView):
+    def get(self, request, *args, **kwargs):
+        form = BusinessForm()
+        
+        context = {
+            'form': form
+        }
+        return render(request, 'pages/new_capital.html', context)
+    
+    def post(self, request, *args):
+        context = list()
+        form = BusinessForm()
+        print("-----------form")
+        print(form)
+        if form.is_valid():
+            form.save()
+            
+            info = {
+                'status': True, 
+                'message': "Uploaded Successfully"
+            }
+            
+            context.append(info)
+            return HttpResponse(json.dumps(info))
+
+        else:
+            info = {
+                'status': False,
+                'message': "Failed to Create"
+            }
+            context.append(info)
+            return HttpResponse(json.dumps(info)) 
+    
