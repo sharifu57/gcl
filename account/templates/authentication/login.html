@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="pt-5">
+        <div class="row">
+            <div>
+                <div class="align-center pt-3">
+                    <div class="row justify-content-center form-bg-image">
+                        <div class="text-center text-md-center mb-0 mt-md-0">
+                            <div class="text-center text-md-center mb-0 mt-md-0">
+                                <h4 class="align-center">LOGO HERE</h4>
+                                {% comment %} <img class="align-center" src="{% static 'logos/logo.png' %}" alt=""  style="height: 170px;"> {% endcomment %}
+                            </div>
+                        </div>
+                        <div class="col-5 d-flex align-items-center justify-content-center pt-5">
+                            <div class="bg-white shadow border-0  border-light p-4 p-lg-5 w-100 fmxw-500">
+                                <form class="mt-4" method="post" action="">
+                                    {% csrf_token %}
+                                    {% load widget_tweaks %}
+
+                                    <div class="form-group mb-4">
+                                        <label for="username">
+                                            Username/Email
+                                        </label>
+                                        <div class="input-group">
+                                            <span class="input-group-text" id="basic-addon1" style="border-radius: 0px;">
+                                                <span class="fas fa-user"></span>
+                                            </span>
+                                            {% render_field form.username class="form-control" autocomplete="off" %}
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group mb-4" style="border-radius: 0px;">
+                                        <label for="password">Password
+                                            
+                                        </label>
+                                        <div class="input-group" style="border-radius: 0px;">
+                                            <span class="input-group-text" id="basic-addon1" style="border-radius: 0px;">   
+                                                <span class="fas fa-key"></span>
+                                            </span>
+                                            {% render_field form.password class="form-control" autocomplete="off" %}
+                                        </div>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button type="submit" name="submit" class="btn text-bold" style="border-radius: 0px; background-color: #231F20; color: white;">Log In</button>
+                                    </div>
+                                </form>
+                                
+                                {% if form.non_field_errors %}
+                                    <div class="alert alert-danger"> 
+                                        {% for error in form.non_field_errors %}
+                                            <p>{{ error }}</p>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+
+                                    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+    

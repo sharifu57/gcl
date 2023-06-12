@@ -1,0 +1,40 @@
+{% load pagination_tags %}
+{% paginate page_obj 10 paging %}
+<ul class="pagination pagination-rounded justify-content-end">
+    {% if paging.first %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ paging.first.number }}&query={{ paging.query }}&status={{status}}&q={{key}}&type={{type}}&mode={{mode}}&orderId={{orderId}}&page_type={{page_type}}">
+            {{ paging.first.number }}
+        </a>
+    </li>
+    {% endif %}
+
+    {% if paging.prev %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ paging.prev.number }}&query={{ paging.query }}&status={{status}}&q={{key}}&type={{type}}&mode={{mode}}&orderId={{orderId}}&page_type={{page_type}}">&laquo;</a>
+    </li>
+    {% endif %}
+
+    {% for page in paging.pages %}
+    <li class="page-item {% if page.is_current %}active{% endif %}">
+        <a class="page-link" href="?page={{ page.number }}&query={{ paging.query }}&status={{status}}&q={{key}}&type={{type}}&mode={{mode}}&orderId={{orderId}}&page_type={{page_type}}">
+            {{ page.number }}
+        </a>
+    </li>
+    {% endfor %}
+
+    {% if paging.last %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ paging.last.number }}&query={{ paging.query }}&status={{status}}&q={{key}}&page_type={{page_type}}">
+            {{ paging.last.number }}
+        </a>
+    </li>
+    {% endif %}
+
+    {% if paging.next %}
+    <li class="page-item">
+        <a class="page-link" href="?page={{ paging.next.number }}&query={{ paging.query }}&status={{status}}&q={{key}}&page_type={{page_type}}">&raquo;</a>
+    </li>
+    {% endif %}
+</ul>
+{% endpaginate %}
