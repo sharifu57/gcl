@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load humanize %}
 
 {% block content %}
 
@@ -8,7 +9,7 @@
         <div class="section pt-5">
             <div class="row">
                 <div class="col-md-10">
-                    <p>TOTAL CAPITAL: <span class="h1">200,000 Tzs</span></p>
+                    <p>TODAY'S CAPITAL: <span class="h1">{{capital|intcomma}}</span> <span>Tzs</span></p>
                 </div>
                 <div class="col-md-2 float-lg-end">
                     <div class="text-right">
@@ -19,9 +20,72 @@
                 </div>
             </div>
         </div>
+        <div class="pt-5">
+            <div class="card">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-md-11">
+                            <h5>TRANSACTIONS</h5>
+                        </div>
+                        <div class="col-md-1">
+                            <div class="text-right">
+                                <a href="javascript:" data-href="{% url 'add_transaction' %}" class="new-transaction-link">
+                                    <button class="btn btn-primary me-md-2 btn btn-primary btn-sm" type="button" style="border-radius: 20px;">+ Add</button>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>S/N</th>
+                                <th>Amount</th>
+                                <th>Type</th>
+                                <th>Tag</th>
+                                <th>Created</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% if transactions %}
+                                
+                                {% for transaction in transactions %}
+
+                                    <tr>
+                                        <td>{{ forloop.counter }}</td>
+                                        <td>{{transaction.amount}}</td>
+                                        <td>
+                                            {% if transaction.amount_type == 1 %}
+                                                <p>CASH</p>
+                                            {% else %}
+                                                <p>FLOAT</p>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            {% if transaction.tag == 1 %}
+                                                <p style="color:green">IN</p>
+                                            {% else %}
+                                                <p style="color:red">OUT</p>
+                                            {% endif %}
+                                        </td>
+                                        <td>{{transaction.created}}</td>
+                                    </tr>
+                                    
+                                {% endfor %}
+                                    
+                            {% else %}
+
+                            {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 
-
+    {% comment %} create-transaction-form {% endcomment %}
 {% endblock content %}
 
 {% block scripts %}
@@ -33,6 +97,18 @@
         let title = "ADD NEW CAPITAL";   
         let columnClass = "col-md-7"
         let formSelector = ".create-capital-form"
+        let containerFluid = false
+
+        ajaxPost(title, url, columnClass, containerFluid, formSelector);
+        })
+    });
+
+    $(function(){
+        $(document).on('click', '.new-transaction-link', function() {
+        let url = $(this).data('href');
+        let title = "NEW TRANSACTION";   
+        let columnClass = "col-md-7"
+        let formSelector = ".create-transaction-form"
         let containerFluid = false
 
         ajaxPost(title, url, columnClass, containerFluid, formSelector);

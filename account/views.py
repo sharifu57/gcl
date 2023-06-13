@@ -9,6 +9,10 @@ from account.forms import *
 from django.contrib import messages
 from django.http import HttpResponse, JsonResponse
 import json
+import pendulum
+from datetime import datetime
+import datetime
+from django.db.models import Sum
 
 # Create your views here.
 class MainView(View):
@@ -56,8 +60,34 @@ class AuthenticationView(View):
         
 class DashboardView(MainView):
     def get(self, request, *args, **kwargs):
+        # now = pendulum.now()
+        # start_date = now.start_of('month').date()
+        # end_date = now.end_of('month').date()
+        business = Business.objects.filter(
+            is_active=True,
+            is_deleted=False,
+            # created__date__range=[start_date,end_data]
+        )
+        cash_amount = business.aggregate(total=Sum('cash_capital'))
+        float_amount = business.aggregate(total=Sum('float_capital'))
         
-        return render(request, 'pages/dashboard.html')
+        cash_total = cash_amount['total'] or 0
+        float_total = float_amount['total'] or 0
+        capital = cash_total + float_total
+        
+        transactions = Transaction.objects.filter(
+            is_active=True,
+            is_deleted=False,
+        ).order_by('-created')
+        
+        context = {
+            'cash':cash_amount,
+            'float':float_amount,
+            'capital':capital,
+            'transactions':transactions
+        }
+        return render(request, 'pages/dashboard.html', context)
+
     
 class AddCapitalView(MainView):
     def get(self, request, *args, **kwargs):
@@ -70,11 +100,15 @@ class AddCapitalView(MainView):
     
     def post(self, request, *args):
         context = list()
-        form = BusinessForm()
-        print("-----------form")
-        print(form)
+        form = BusinessForm(request.POST)
+
         if form.is_valid():
-            form.save()
+            business = Business()
+            business.cash_capital = request.POST['cash_capital']
+            business.float_capital = request.POST['float_capital']
+            business.user = request.user
+            business.save()
+            business.refresh_from_db()
             
             info = {
                 'status': True, 
@@ -91,4 +125,42 @@ class AddCapitalView(MainView):
             }
             context.append(info)
             return HttpResponse(json.dumps(info)) 
+        
+class AddNewTransaction(MainView):
+    def get(self, request, *args, **kwargs):
+        form = TransactionForm()
+        
+        context = {
+            'form': form
+        }
+        return render(request, 'pages/add_transaction.html', context)
     
+    def post(self, request, *args, **kwargs):
+        context = list()
+        form = TransactionForm(request.POST)
+        
+        if form.is_valid():
+            print("---------valid form")
+            transaction = Transaction()
+            transaction.amount = request.POST['amount']
+            transaction.amount_type = request.POST['amount_type']
+            transaction.tag = request.POST['tag']
+            transaction.save()
+            transaction.refresh_from_db()
+            
+            info = {
+                'status': True, 
+                'message': "Success"
+            }
+            context.append(context)
+            return HttpResponse(json.dumps(info))
+    
+        else:
+            print("--------invalid form")
+            info = {
+                'status': False,
+                'message': "Failed to create"
+            }
+            
+            context.append(context)
+            return HttpResponse(json.dumps(info))

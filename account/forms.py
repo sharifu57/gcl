@@ -57,8 +57,19 @@ class BusinessForm(forms.ModelForm):
         self.fields['cash_capital'].required = True
         self.fields['float_capital'].required = False
    
-    def save(self, *args, **kwargs):
-        form = super(BusinessForm, self).save(*args, **kwargs, commit=False)
-        form.save()
-        return form 
+    # def save(self, *args, **kwargs):
+    #     form = super(BusinessForm, self).save(*args, **kwargs, commit=False)
+    #     form.save()
+    #     return form 
+    
+class TransactionForm(forms.ModelForm):
+    class Meta:
+        model = Transaction
+        fields = ['amount', 'amount_type','tag']
+        
+    def __init__(self, *args, **kwargs):
+        super(TransactionForm, self).__init__(*args, **kwargs)
+        self.fields['amount'].required = True
+        self.fields['amount_type'].required = True
+        self.fields['tag'].required = True
     

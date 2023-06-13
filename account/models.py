@@ -24,7 +24,7 @@ class Business(MainModel):
     
     def __str__(self):
         
-        return self.id
+        return self.user.username
 
 AMOUNT_TYPE = (
     (1, 'CASH'), 

@@ -25,8 +25,11 @@ SECRET_KEY = 'django-insecure-w6=34j$uinhem$x%n6&4($w#rl&t-ki^ivz2ecy+(z2n5idk!6
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+ALLOWED_HOSTS = ['*']
 
-ALLOWED_HOSTS = []
+HOST_IP = '192.168.2.20'
+HOST_ADDR = f"http://{HOST_IP}:7005"
+DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:7005"
 
 
 # Application definition
@@ -38,8 +41,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.humanize',
     'account',
-    'widget_tweaks'
+    'widget_tweaks',
+    'django_extensions'
 ]
 
 MIDDLEWARE = [
@@ -76,15 +81,28 @@ WSGI_APPLICATION = 'gcl.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'gcl',
+        'USER': 'gcl',
+        'PASSWORD': 'qazplm741',
+        'HOST': HOST_IP,
+        'PORT': '5432',
     }
 }
 
 # Set the session expiration time
 SESSION_COOKIE_AGE = 1800  # 30 minutes in seconds
+SESSION_EXPIRE_SECONDS = 3600 # 5 minutes expire
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 
 # Specify the URL to redirect to after session expiration
 LOGIN_URL = '/login/'
