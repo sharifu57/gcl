@@ -13,6 +13,7 @@ import pendulum
 from datetime import datetime
 import datetime
 from django.db.models import Sum
+from django.db.models import Q
 
 # Create your views here.
 class MainView(View):
@@ -80,11 +81,19 @@ class DashboardView(MainView):
             is_deleted=False,
         ).order_by('-created')
         
+        business_id = business.last()
+        if business_id:
+            business_id = business_id.id
+        else:
+            business_id = None
+        print("-----lastly id ", business_id)
+      
         context = {
             'cash':cash_amount,
             'float':float_amount,
             'capital':capital,
-            'transactions':transactions
+            'transactions':transactions,
+            'business': business_id
         }
         return render(request, 'pages/dashboard.html', context)
 
@@ -129,15 +138,24 @@ class AddCapitalView(MainView):
 class AddNewTransaction(MainView):
     def get(self, request, *args, **kwargs):
         form = TransactionForm()
-        
+        business = self.kwargs.get('business')
         context = {
-            'form': form
+            'form': form,
+            'business': business
         }
         return render(request, 'pages/add_transaction.html', context)
     
     def post(self, request, *args, **kwargs):
         context = list()
         form = TransactionForm(request.POST)
+        business = self.kwargs.get('business')
+        
+        if business:
+            print("------here business")
+            print(business)
+            business_id = Business.objects.filter(id=business).first()
+        else:
+            business_id = None
         
         if form.is_valid():
             print("---------valid form")
@@ -145,6 +163,8 @@ class AddNewTransaction(MainView):
             transaction.amount = request.POST['amount']
             transaction.amount_type = request.POST['amount_type']
             transaction.tag = request.POST['tag']
+            transaction.business = business_id
+            transaction.staff = request.user
             transaction.save()
             transaction.refresh_from_db()
             

@@ -65,7 +65,7 @@ class BusinessForm(forms.ModelForm):
 class TransactionForm(forms.ModelForm):
     class Meta:
         model = Transaction
-        fields = ['amount', 'amount_type','tag']
+        fields = ['business','amount', 'amount_type','tag']
         
     def __init__(self, *args, **kwargs):
         super(TransactionForm, self).__init__(*args, **kwargs)

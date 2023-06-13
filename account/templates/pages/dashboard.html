@@ -29,7 +29,7 @@
                         </div>
                         <div class="col-md-1">
                             <div class="text-right">
-                                <a href="javascript:" data-href="{% url 'add_transaction' %}" class="new-transaction-link">
+                                <a href="javascript:" data-href="{% url 'add_transaction' business %}" class="new-transaction-link">
                                     <button class="btn btn-primary me-md-2 btn btn-primary btn-sm" type="button" style="border-radius: 20px;">+ Add</button>
                                 </a>
                             </div>
@@ -55,7 +55,15 @@
 
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
-                                        <td>{{transaction.amount}}</td>
+                                        <td>
+                                            {% if transaction.tag == 1 %}
+                                                <p>{{transaction.amount|intcomma}}</p>
+                                            {% else %}
+                                                <p style="color:red">-{{transaction.amount|intcomma}}</p>
+                                            {% endif %}
+                                            
+                                            
+                                        </td>
                                         <td>
                                             {% if transaction.amount_type == 1 %}
                                                 <p>CASH</p>
@@ -71,6 +79,7 @@
                                             {% endif %}
                                         </td>
                                         <td>{{transaction.created}}</td>
+                                        <td>action</td>
                                     </tr>
                                     
                                 {% endfor %}

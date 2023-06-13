@@ -1,21 +1,9 @@
-<form class="create-transaction-form card-body" action="{% url 'add_transaction'  %}" method="post" enctype="multipart/form-data" novalidate>
+<form class="create-transaction-form card-body" action="{% url 'add_transaction' business %}" method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
     {% load widget_tweaks %}
 
     <div class="container-fluid">
         <div class="row">
-            {% comment %} <div class="col-md-12 pt-3">
-                <div class="row">
-                    <div class="col-md-12">
-                        <div class="form-group">
-                            <label for="" style="font-size: 13px;">BUSINESS</label>
-                            {% render_field form.business class="form-control" style="border-radius: 20px" %}
-                            {{form.business.errors}}
-                        </div>
-                    </div>
-                </div>
-            </div> {% endcomment %}
-
             <div class="col-md-12 pt-3">
                 <div class="row">
                     <div class="col-md-12">
