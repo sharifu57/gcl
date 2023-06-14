@@ -14,6 +14,7 @@ from datetime import datetime
 import datetime
 from django.db.models import Sum
 from django.db.models import Q
+from account.manager.account_manager import *
 
 # Create your views here.
 class MainView(View):
@@ -23,6 +24,13 @@ class MainView(View):
     def dispatch(self, request, *args, **kwargs):
         return super().dispatch(request, *args, **kwargs)
     
+    
+class LogoutView(MainView):
+    def get(self, request):
+        # Do some stuff
+        logout(request)
+        # Redirect to some page
+        return redirect('login')
     
 class AuthenticationView(View):
     def get(self, request, *args, **kwargs):
@@ -64,36 +72,50 @@ class DashboardView(MainView):
         # now = pendulum.now()
         # start_date = now.start_of('month').date()
         # end_date = now.end_of('month').date()
-        business = Business.objects.filter(
-            is_active=True,
-            is_deleted=False,
-            # created__date__range=[start_date,end_data]
-        )
-        cash_amount = business.aggregate(total=Sum('cash_capital'))
-        float_amount = business.aggregate(total=Sum('float_capital'))
+        user = request.user
+        office = AccountManager().get_user_details(user)
+        business = None
+        if office:
+            print("----there is office")
+            print(office)
+            business = Business.objects.filter(
+                is_active=True,
+                is_deleted=False,
+                office=office
+                # created__date__range=[start_date,end_data]
+            )
+            print(business)
+        else:
+            office == 2
+            print("-----no office")
+            
+        business_id = business.last().id if business else None
+        print("-----lastly id ", business_id)
         
-        cash_total = cash_amount['total'] or 0
-        float_total = float_amount['total'] or 0
+        cash_amount = business.aggregate(total=Sum('cash_capital'))['total'] if business else 0
+        float_amount = business.aggregate(total=Sum('float_capital'))['total'] if business else 0
+        
+        cash_total = cash_amount or 0
+        float_total = float_amount or 0
         capital = cash_total + float_total
         
         transactions = Transaction.objects.filter(
             is_active=True,
             is_deleted=False,
+            business=business_id
         ).order_by('-created')
         
-        business_id = business.last()
-        if business_id:
-            business_id = business_id.id
-        else:
-            business_id = None
-        print("-----lastly id ", business_id)
+        total_transactions = transactions.aggregate(total=Sum('amount'))
+        
       
         context = {
             'cash':cash_amount,
             'float':float_amount,
             'capital':capital,
             'transactions':transactions,
-            'business': business_id
+            'business': business_id,
+            'total_transactions':total_transactions,
+            'office': office
         }
         return render(request, 'pages/dashboard.html', context)
 
@@ -110,11 +132,24 @@ class AddCapitalView(MainView):
     def post(self, request, *args):
         context = list()
         form = BusinessForm(request.POST)
+        branch = Branch.objects.filter(
+            is_active=True, 
+            is_deleted=False
+        ).first()
+        
+        if branch:
+            branch_id=branch.id
+            print("-----branch")
+            print(branch_id)
+        
+        else:
+            branch=None
 
         if form.is_valid():
             business = Business()
             business.cash_capital = request.POST['cash_capital']
             business.float_capital = request.POST['float_capital']
+            business.branch = branch_id
             business.user = request.user
             business.save()
             business.refresh_from_db()
@@ -184,3 +219,14 @@ class AddNewTransaction(MainView):
             
             context.append(context)
             return HttpResponse(json.dumps(info))
+        
+class BranchesView(MainView):
+    def get(self, request):
+        
+        return render(request, 'pages/branches.html')
+    
+        
+class ReportBaseView(MainView):
+    def get(self, request, *args, **kwargs):
+        
+        return render(request, 'reports/index.html')

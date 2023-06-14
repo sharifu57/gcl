@@ -3,7 +3,6 @@
 {% load humanize %}
 
 {% block content %}
-
     {% include 'common/navbar.html' %}
     <div class="container">
         <div class="section pt-5">
@@ -13,9 +12,12 @@
                 </div>
                 <div class="col-md-2 float-lg-end">
                     <div class="text-right">
-                        <a href="javascript:" data-href="{% url 'add_new_capital' %}" class="new-capital-link">
-                            <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">ADD CAPITAL</button>
-                        </a>
+                        {% if request.user.is_superuser %}
+                            <a href="javascript:" data-href="{% url 'add_new_capital' %}" class="new-capital-link">
+                                <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">ADD CAPITAL</button>
+                            </a>
+                        {% endif %}
+                        
                     </div>
                 </div>
             </div>
@@ -24,7 +26,7 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col-md-11">
+                        <div class="col-md-10">
                             <h5>TRANSACTIONS</h5>
                         </div>
                         <div class="col-md-1">
@@ -33,6 +35,12 @@
                                     <button class="btn btn-primary me-md-2 btn btn-primary btn-sm" type="button" style="border-radius: 20px;">+ Add</button>
                                 </a>
                             </div>
+                        </div>
+                        <div class="col-md-1">
+                            {% if office %}
+                                <span class="badge rounded-pill bg-success">{{office}}</span>
+                            {% else %}
+                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -85,10 +93,21 @@
                                 {% endfor %}
                                     
                             {% else %}
-
+                                <tr id="not-bills-table-items">
+                                    <td colspan="12">
+                                        <div class="alert alert-info text-center">
+                                            <h3>No Transactions Found ...</h3>
+                                        </div>
+                                    </td>
+                                </tr>
                             {% endif %}
                         </tbody>
                     </table>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>Total Colletected: <span class="text-bold" style="font-weight: 500;">{{total_transactions.total|intcomma}}</span></p> 
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

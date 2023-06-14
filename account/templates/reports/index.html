@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+    {% include 'common/navbar.html' %}
+    
+{% endblock content %}
+
+{% block scripts %}
+<script src="/static/assets/js/helpers.js"></script>
+<script>
+    $(function(){
+        $(document).on('click', '.new-capital-link', function() {
+        let url = $(this).data('href');
+        let title = "ADD NEW CAPITAL";   
+        let columnClass = "col-md-7"
+        let formSelector = ".create-capital-form"
+        let containerFluid = false
+
+        ajaxPost(title, url, columnClass, containerFluid, formSelector);
+        })
+    });
+
+    $(function(){
+        $(document).on('click', '.new-transaction-link', function() {
+        let url = $(this).data('href');
+        let title = "NEW TRANSACTION";   
+        let columnClass = "col-md-7"
+        let formSelector = ".create-transaction-form"
+        let containerFluid = false
+
+        ajaxPost(title, url, columnClass, containerFluid, formSelector);
+        })
+    });
+
+
+    function datePickerSelector() {
+        $('#datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            startView: 0,
+            todayBtn: false,
+            clearBtn: true,
+            autoclose: true,
+            todayHighlight: true
+        });
+    }
+
+</script>
+{% endblock scripts %}

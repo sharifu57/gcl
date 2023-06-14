@@ -17,7 +17,16 @@ class MainModel(models.Model):
     class Meta:
         abstract = True
         
+class Branch(MainModel):
+    name = models.CharField(max_length=200, null=True, blank=True, unique=True)
+    code = models.CharField(max_length=200, null=True, blank=True)
+    
+    def __str__(self):
+        
+        return self.name
+        
 class Business(MainModel):
+    office = models.ForeignKey("account.Office", on_delete=models.CASCADE, null=True, blank=True)
     cash_capital = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     float_capital = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
@@ -25,6 +34,18 @@ class Business(MainModel):
     def __str__(self):
         
         return self.user.username
+    
+
+class Office(MainModel):
+    branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True)
+    staff = models.ManyToManyField(User, null=True, blank=True)
+    name = models.CharField(max_length=200, null=True, blank=True)
+    code = models.CharField(max_length=200, null=True, blank=True)
+    
+    def __str__(self):
+        
+        return self.name
+    
 
 AMOUNT_TYPE = (
     (1, 'CASH'), 

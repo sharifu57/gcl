@@ -49,13 +49,14 @@ class AuthenticationForm(forms.ModelForm):
 class BusinessForm(forms.ModelForm):
     class Meta:
         model = Business
-        fields = ['cash_capital', 'float_capital']
+        fields = ['cash_capital', 'float_capital', 'office']
         
         
     def __init__(self, *args, **kwargs):
         super(BusinessForm, self).__init__(*args, **kwargs)
         self.fields['cash_capital'].required = True
         self.fields['float_capital'].required = False
+        self.fields['office'].required = True
    
     # def save(self, *args, **kwargs):
     #     form = super(BusinessForm, self).save(*args, **kwargs, commit=False)
