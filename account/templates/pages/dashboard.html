@@ -13,9 +13,11 @@
                 <div class="col-md-2 float-lg-end">
                     <div class="text-right">
                         {% if request.user.is_superuser %}
-                            <a href="javascript:" data-href="{% url 'add_new_capital' %}" class="new-capital-link">
-                                <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">ADD CAPITAL</button>
-                            </a>
+                            {% if capital == 0 %}
+                                <a href="javascript:" data-href="{% url 'add_new_capital' %}" class="new-capital-link">
+                                    <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">ADD CAPITAL</button>
+                                </a>
+                            {% endif %}
                         {% endif %}
                         
                     </div>
@@ -23,6 +25,7 @@
             </div>
         </div>
         <div class="pt-5">
+            
             <div class="card">
                 <div class="card-header">
                     <div class="row">
@@ -30,11 +33,17 @@
                             <h5>TRANSACTIONS</h5>
                         </div>
                         <div class="col-md-1">
-                            <div class="text-right">
-                                <a href="javascript:" data-href="{% url 'add_transaction' business %}" class="new-transaction-link">
-                                    <button class="btn btn-primary me-md-2 btn btn-primary btn-sm" type="button" style="border-radius: 20px;">+ Add</button>
-                                </a>
-                            </div>
+                            {% if capital != 0 %}
+                                <div class="text-right">
+                                    <a href="javascript:" data-href="{% url 'add_transaction' business %}" class="new-transaction-link">
+                                        <button class="btn btn-primary me-md-2 btn btn-primary btn-sm" type="button" style="border-radius: 20px;">+ Add</button>
+                                    </a>
+                                </div>
+                            {% else %}
+                                
+                            {% endif %}
+                            
+                            
                         </div>
                         <div class="col-md-1">
                             {% if office %}
@@ -73,10 +82,30 @@
                                             
                                         </td>
                                         <td>
-                                            {% if transaction.amount_type == 1 %}
-                                                <p>CASH</p>
+                                            {% if transaction.amount_type == 0 %}
+                                                <p>CASH ON HAND</p>
+                                            {% elif transaction.amount_type == 1 %}
+                                                <p>M-PESA SUPER</p>
+                                            {% elif transaction.amount_type == 2 %}
+                                                <p>M-PESA MINOR</p>
+                                            {% elif transaction.amount_type == 3 %}
+                                                <p>TIGO-PESA SUPER</p>
+                                            {% elif transaction.amount_type == 4 %}
+                                                <p>TIGO-PESA MINOR</p>
+                                            {% elif transaction.amount_type == 5 %}
+                                                <p>AIRTEL MONEY SUPER</p>
+                                            {% elif transaction.amount_type == 6 %}
+                                                <p>AIRTEL MONEY MINOR</p>
+                                            {% elif transaction.amount_type == 7 %}
+                                                <p>HALO PESA SUPER</p>
+                                            {% elif transaction.amount_type == 8 %}
+                                                <p>HALO PESA MINOR</p>
+                                            {% elif transaction.amount_type == 9 %}
+                                                <p>PBZ</p>
+                                            {% elif transaction.amount_type == 10 %}
+                                                <p>NMB</p>
                                             {% else %}
-                                                <p>FLOAT</p>
+                                                <p>CRDB</p>
                                             {% endif %}
                                         </td>
                                         <td>
@@ -105,8 +134,20 @@
                     </table>
                     <div class="row">
                         <div class="col-md-3">
-                            <p>Total Colletected: <span class="text-bold" style="font-weight: 500;">{{total_transactions.total|intcomma}}</span></p> 
+                            <p>Total Float: <span class="text-bold" style="font-weight: 500;">{{total_transactions.total|intcomma}}</span></p> 
                         </div>
+                        {% comment %} {{cash_in_hand.total|intcomma}} {% endcomment %}
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <p>Total Cash: <span class="text-bold" style="font-weight: 500;">{{cash_in_hand.total|intcomma}}</span></p> 
+                        </div>
+                        {% comment %} {{balance}} {% endcomment %}
+                    </div>
+                    <div class="col-md-3">
+                        <p style="font-weight: 700; font-size: 17px">Close Balance (excess or loss): 
+                            <span class="text-bold" style="font-weight: 500;">{{close_balance|intcomma}}</span>
+                        </p> 
                     </div>
                 </div>
             </div>

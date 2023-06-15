@@ -55,6 +55,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'account.middleware.SessionExpirationMiddleware',
+    'account.middleware.SessionTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'gcl.urls'
@@ -103,6 +105,7 @@ DATABASES = {
 SESSION_COOKIE_AGE = 1800  # 30 minutes in seconds
 SESSION_EXPIRE_SECONDS = 3600 # 5 minutes expire
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
+
 
 # Specify the URL to redirect to after session expiration
 LOGIN_URL = '/login/'

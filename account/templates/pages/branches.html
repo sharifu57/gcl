@@ -7,13 +7,13 @@
     <div class="container">
         <div class="section pt-5">
             <div class="row">
-                <div class="col-md-10">
+                <div class="col-md-11">
                     <p class="h1">Branches and Offices</p>
                 </div>
-                <div class="col-md-2 float-lg-end">
+                <div class="col-md-1 float-lg-end">
                     <div class="text-right">
                         {% if request.user.is_superuser %}
-                            <a href="javascript:" data-href="{% url 'add_new_capital' %}" class="new-capital-link">
+                            <a href="javascript:" data-href="{% url 'add_new_branch' %}" class="new-branch-link">
                                 <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">+ Branch</button>
                             </a>
                         {% endif %}
@@ -22,5 +22,115 @@
                 </div>
             </div>
         </div>
+        <div class="pt-5">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card card-default">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <h5>Branches</h5>
+                                </div>
+                                <div class="col-md-2">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>S/N</th>
+                                        <th>Name</th>
+                                        <th>code</th>
+                                        <th>offices</th>
+                                        <th>Created</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if branches %}
+                                        
+                                        {% for branch in branches %}
+        
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>
+                                                    {{branch.name}}
+                                                </td>
+                                                <td>
+                                                    {{branch.code}}
+                                                </td>
+                                                <td>
+                                                    {{branch.office.count}}
+                                                </td>
+                                                <td>{{branch.created}}</td>
+                                                <td>action</td>
+                                            </tr>
+                                            
+                                        {% endfor %}
+                                            
+                                    {% else %}
+                                        <tr id="not-bills-table-items">
+                                            <td colspan="12">
+                                                <div class="alert alert-info text-center">
+                                                    <h3>No Transactions Found ...</h3>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card card-default">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <h5>Offices</h5>
+                                </div>
+                                <div class="col-md-2">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 {% endblock content %}
+
+{% block scripts %}
+    <script src="/static/assets/js/helpers.js"></script>
+    <script>
+        $(function(){
+            $(document).on('click', '.new-branch-link', function() {
+            let url = $(this).data('href');
+            let title = "ADD NEW BRANCH";   
+            let columnClass = "col-md-7"
+            let formSelector = ".add-new-branch-form"
+            let containerFluid = false
+
+            ajaxPost(title, url, columnClass, containerFluid, formSelector);
+            })
+        });
+
+        function datePickerSelector() {
+            $('#datepicker').datepicker({
+                format: 'yyyy-mm-dd',
+                startView: 0,
+                todayBtn: false,
+                clearBtn: true,
+                autoclose: true,
+                todayHighlight: true
+            });
+        }
+
+    </script>
+{% endblock scripts %}

@@ -30,6 +30,7 @@ class Business(MainModel):
     cash_capital = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     float_capital = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
+    capital = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
     
     def __str__(self):
         
@@ -48,8 +49,18 @@ class Office(MainModel):
     
 
 AMOUNT_TYPE = (
-    (1, 'CASH'), 
-    (2, 'FLOAT')
+    (0, 'CASH ON HAND'),
+    (1, 'M-PESA SUPER'), 
+    (2, 'M-PESA MINOR'),
+    (3, 'TIGO-PESA SUPER'),
+    (4, 'TIGO-PESA MINOR'),
+    (5, 'AIRTEL MONEY SUPER'),
+    (6, 'AIRTEL MONEY MINOR'),
+    (7, 'HALO PESA SUPER'),
+    (8, 'HALO PESA MINOR'),
+    (9, 'PBZ'),
+    (10, 'NMB'),
+    (11, 'CRDB'),
 )
 
 class Transaction(MainModel):

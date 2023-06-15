@@ -49,19 +49,16 @@ class AuthenticationForm(forms.ModelForm):
 class BusinessForm(forms.ModelForm):
     class Meta:
         model = Business
-        fields = ['cash_capital', 'float_capital', 'office']
+        fields = ['capital', 'office']
         
         
     def __init__(self, *args, **kwargs):
         super(BusinessForm, self).__init__(*args, **kwargs)
-        self.fields['cash_capital'].required = True
-        self.fields['float_capital'].required = False
+        # self.fields['cash_capital'].required = True
+        # self.fields['float_capital'].required = False
         self.fields['office'].required = True
+        self.fields['capital'].required = True
    
-    # def save(self, *args, **kwargs):
-    #     form = super(BusinessForm, self).save(*args, **kwargs, commit=False)
-    #     form.save()
-    #     return form 
     
 class TransactionForm(forms.ModelForm):
     class Meta:
@@ -74,3 +71,12 @@ class TransactionForm(forms.ModelForm):
         self.fields['amount_type'].required = True
         self.fields['tag'].required = True
     
+
+class BranchForm(forms.ModelForm):
+    class Meta:
+        model = Branch
+        fields = ['name']
+        
+    def __init__(self, *args, **kwargs):
+        super(BranchForm, self).__init__(*args, **kwargs)
+        self.fields['name'].required = True

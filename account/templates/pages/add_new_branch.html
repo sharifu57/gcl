@@ -1,0 +1,20 @@
+<form class="add-new-branch-form card-body" action="{% url 'add_new_branch' %}" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% load widget_tweaks %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 pt-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="" style="font-size: 13px;">Branch Name</label>
+                            {% render_field form.name class="form-control" style="border-radius: 20px" %}
+                            {{form.name.errors}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
