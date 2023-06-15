@@ -35,6 +35,8 @@
                             <input type="text" hidden="hidden" name="__pageoverflow" value="0">
                             <input type="text" hidden="hidden" name="__overwrite" value="false">
                             <input type="text" hidden="hidden" name="__parameterpage" value="false">
+
+                            {% comment %} <input type="text" id="datepicker" placeholder="search"> {% endcomment %}
                             <div class="row">
                                 {% comment %} <div class="col-md-3">
                                     <div class="row">
@@ -61,8 +63,8 @@
                                         </label>
                                         <div class="col-md-8">
                                             <input type="search" name="start_date" class="form-control"
-                                                placeholder="pick start date of that month" readonly autocomplete="false"
-                                                onmouseenter="date_pick(this)" id="start_date">
+                                            placeholder="pick start date of that month" readonly autocomplete="false"
+                                            onmouseenter="date_pick(this)" id="start_date">
                                         </div>
                                     </div>
                                 </div>
@@ -80,6 +82,7 @@
                                         </div>
                                     </div>
                                 </div>
+                                
                                 <div class="col-md-4">
                                     <button type="submit" class="btn btn-sm btn-primary btn-labeled btn-rounded report-btn-submit" value='pdf'>
                                         <i class="icon-file-pdf position-left"></i> Get PDF
@@ -101,17 +104,46 @@
 {% block scripts %}
     <script src="/static/assets/js/helpers.js"></script>
     <script>
-        function date_pick() {
-            $('.pickadate').datepicker({
-                format: 'yyyy-mm-dd',
+        $( function() {
+            $( "#datepicker" ).datepicker({
+                format: "yyyy-mm-dd",
                 startView: 0,
-                todayBtn: false,
+                todayBtn: "linked",
+                clearBtn: true,
+                autoclose: true,
+                todayHighlight: true
+            });
+        } );
+
+        $(".start_date").datepicker({
+            format: "yyyy-mm-dd",
+            startView: 0,
+            todayBtn: "linked",
+            clearBtn: true,
+            autoclose: true,
+            todayHighlight: true
+        });
+    
+        $(".end_date").datepicker({
+            format: "yyyy-mm-dd",
+            startView: 0,
+            todayBtn: "linked",
+            clearBtn: true,
+            autoclose: true,
+            todayHighlight: true
+        });
+        function date_pick(selector) {
+            $(selector).datepicker({
+                format: "yyyy-mm-dd",
+                startView: 0,
+                todayBtn: "linked",
                 clearBtn: true,
                 autoclose: true,
                 todayHighlight: true
             });
         }
-
+        
+    
         $('.report-btn-submit').on('click', function (e) {
             e.preventDefault();
             $('.format-param').attr('value', $(this).val());
