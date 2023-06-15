@@ -1,0 +1,48 @@
+{% load pagination_tags %}
+{% paginate page_obj 10 paging %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center float-right mr-1">
+        {% if paging.prev %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paging.prev.number }}&query={{ paging.query }}&status={{status}}&q={{key}}" aria-label="Previous">
+                    <span aria-hidden="true">« Prev</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+        {% endif %}
+
+        {% if paging.first %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paging.first.number }}&query={{ paging.query }}&status={{status}}&q={{key}}">
+                    {{ paging.first.number }}
+                </a>
+            </li>
+        {% endif %}
+
+        {% for page in paging.pages %}
+            <li class="page-item {% if page.is_current %}active{% endif %}">
+                <a class="page-link" href="?page={{ page.number }}&query={{ paging.query }}&status={{status}}&q={{key}}">
+                    {{ page.number }}
+                </a>
+            </li>
+        {% endfor %}
+
+        {% if paging.last %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paging.last.number }}&query={{ paging.query }}&status={{status}}&q={{key}}">
+                    {{ paging.last.number }}
+                </a>
+            </li>
+        {% endif %}
+        
+        {% if paging.next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ paging.next.number }}&query={{ paging.query }}&status={{status}}&q={{key}}" aria-label="Next">
+                    <span aria-hidden="true">Next »</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endpaginate %}

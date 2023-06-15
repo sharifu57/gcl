@@ -102,7 +102,7 @@ DATABASES = {
 }
 
 # Set the session expiration time
-SESSION_COOKIE_AGE = 1800  # 30 minutes in seconds
+SESSION_COOKIE_AGE = 3600  # 30 minutes in seconds
 SESSION_EXPIRE_SECONDS = 3600 # 5 minutes expire
 SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 

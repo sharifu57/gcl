@@ -18,6 +18,7 @@ from account.manager.account_manager import *
 import pendulum
 import random
 from account.models import *
+from django.conf import settings
 
 # Create your views here.
 class MainView(View):
@@ -78,6 +79,9 @@ class DashboardView(MainView):
         user = request.user
         office = AccountManager().get_user_details(user)
         business = None
+        capital = None
+        balance = 0
+        
         if office:
             print("----there is office")
             print(office)
@@ -102,12 +106,19 @@ class DashboardView(MainView):
         
         cash_total = cash_amount or 0
         float_total = float_amount or 0
-        capital = business.last().capital
+        result = business.last()
+        
+        if result is not None:
+            capital = result.capital
+            
+        else:
+            capital = 0
         
         transactions = Transaction.objects.filter(
             is_active=True,
             is_deleted=False,
-            business=business_id
+            business=business_id,
+            created__date__range=[start_date, end_date]
         ).exclude(
             amount_type = 0
         ).order_by('-created')
@@ -124,7 +135,8 @@ class DashboardView(MainView):
         
         calculated_cash_amount = total_transactions['total']
         calculated_float_amount = total_cash_in_hand['total']
-        balance = calculated_cash_amount + calculated_float_amount
+        if calculated_cash_amount is not None and calculated_float_amount is not None:
+            balance = calculated_cash_amount + calculated_float_amount
         
         close_balance = capital - balance
         
@@ -289,9 +301,29 @@ class NewBranchView(MainView):
             context.append(info)
             return HttpResponse(json.dumps(context))
         
+
+class UsersView(MainView):
+    def get(self, request, *args, **kwargs):
+        users = User.objects.all()
+        
+        context = {
+            'users': users
+        }
+        return render(request, 'pages/users.html', context)
     
         
 class ReportBaseView(MainView):
     def get(self, request, *args, **kwargs):
         
-        return render(request, 'reports/index.html')
+        transactions = Transaction.objects.filter(
+            is_active=True, 
+            is_deleted=False
+        )
+        
+        context = {
+            'transactions': transactions,
+            "system_path": settings.DOCUMENT_SYSTEM_IP,
+        }
+        return render(request, 'reports/index.html', context)
+    
+    

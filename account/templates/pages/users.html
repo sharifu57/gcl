@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+<div class="container">
+    <div class="section pt-5">
+        <div class="row">
+            <div class="col-md-11">
+                <p class="h1">System Users</p>
+            </div>
+            <div class="col-md-1 float-lg-end">
+                <div class="text-right">
+                    {% if request.user.is_superuser %}
+                        <a href="javascript:" data-href="{% url 'add_new_branch' %}" class="new-branch-link">
+                            <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">+ user</button>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="pt-5">
+            
+        </div>
+    </div>
+</div>
+{% endblock content %}

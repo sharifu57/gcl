@@ -10,5 +10,6 @@ urlpatterns = [
     path('reports', views.ReportBaseView.as_view(), name="reports"),
     path('logout', views.LogoutView.as_view(), name="logout"),
     path('branches', views.BranchesView.as_view(), name="branches"),
-    path('add_new_branch', views.NewBranchView.as_view(), name="add_new_branch")
+    path('add_new_branch', views.NewBranchView.as_view(), name="add_new_branch"),
+    path('system_users', views.UsersView.as_view(), name="system_users")
 ]

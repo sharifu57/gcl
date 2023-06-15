@@ -3,48 +3,120 @@
 {% load humanize %}
 
 {% block content %}
-    {% include 'common/navbar.html' %}
-    
+<div class="container">
+    <div class="section pt-5">
+        <div class="row">
+            <div class="col-md-11">
+                <p class="h1">Reports</p>
+            </div>
+            <div class="col-md-1 float-lg-end">
+                <div class="text-right">
+                    {% if request.user.is_superuser %}
+                        <a href="javascript:" data-href="{% url 'add_new_branch' %}" class="new-branch-link">
+                            <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">+ user</button>
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="pt-5">
+            <div class="card ">
+                <div class="card-header text-semibold text-uppercase sys-text">
+                    <h5>
+                        All Business Report
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <form action="{{ system_path }}/output" target="_blank" method="GET" class="report-form form" autocomplete="off">
+                            <input type="text" name="__report" value="IMISV2_Group_life_Detailed_premium_collection.rptdesign" hidden="hidden">
+                            <input type="text" name="__navigationbar" value="true" hidden>
+                            <input type="text" hidden="hidden" class="format-param" name="__format" value="">
+                            <input type="text" hidden="hidden" name="__pageoverflow" value="0">
+                            <input type="text" hidden="hidden" name="__overwrite" value="false">
+                            <input type="text" hidden="hidden" name="__parameterpage" value="false">
+                            <div class="row">
+                                {% comment %} <div class="col-md-3">
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <h6 class="text-semibold">Status:</h6>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <select name="amount_type" class="select">
+                                                {% for transaction in transactions %}
+                                                    <option value="{{ transaction.amount_type }}" style="padding-left: 4px;" >
+                                                        {{ transaction.amount_type }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div> {% endcomment %}
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label">
+                                            <span class="text-semibold" style="font-weight: 600;font-size: 14px;">
+                                                Start Date:
+                                            </span>
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="search" name="start_date" class="form-control"
+                                                placeholder="pick start date of that month" readonly autocomplete="false"
+                                                onmouseenter="date_pick(this)" id="start_date">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="row">
+                                        <label class="col-md-4 control-label">
+                                            <span class="text-semibold" style="font-weight: 600;font-size: 14px;">
+                                                End Date:
+                                            </span>
+                                        </label>
+                                        <div class="col-md-8">
+                                            <input type="search" name="end_date" class="form-control"
+                                                placeholder="pick end date of that month" readonly autocomplete="false"
+                                                onmouseenter="date_pick(this)" id="end_date">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <button type="submit" class="btn btn-sm btn-primary btn-labeled btn-rounded report-btn-submit" value='pdf'>
+                                        <i class="icon-file-pdf position-left"></i> Get PDF
+                                    </button>
+                                    <button type="submit" class="btn btn-sm btn-primary btn-labeled btn-rounded report-btn-submit" value='xls'>
+                                        <i class="icon-file-pdf position-left"></i> Get Excel
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock content %}
 
 {% block scripts %}
-<script src="/static/assets/js/helpers.js"></script>
-<script>
-    $(function(){
-        $(document).on('click', '.new-capital-link', function() {
-        let url = $(this).data('href');
-        let title = "ADD NEW CAPITAL";   
-        let columnClass = "col-md-7"
-        let formSelector = ".create-capital-form"
-        let containerFluid = false
+    <script src="/static/assets/js/helpers.js"></script>
+    <script>
+        function date_pick() {
+            $('.pickadate').datepicker({
+                format: 'yyyy-mm-dd',
+                startView: 0,
+                todayBtn: false,
+                clearBtn: true,
+                autoclose: true,
+                todayHighlight: true
+            });
+        }
 
-        ajaxPost(title, url, columnClass, containerFluid, formSelector);
+        $('.report-btn-submit').on('click', function (e) {
+            e.preventDefault();
+            $('.format-param').attr('value', $(this).val());
+            $('.form').submit();
         })
-    });
 
-    $(function(){
-        $(document).on('click', '.new-transaction-link', function() {
-        let url = $(this).data('href');
-        let title = "NEW TRANSACTION";   
-        let columnClass = "col-md-7"
-        let formSelector = ".create-transaction-form"
-        let containerFluid = false
-
-        ajaxPost(title, url, columnClass, containerFluid, formSelector);
-        })
-    });
-
-
-    function datePickerSelector() {
-        $('#datepicker').datepicker({
-            format: 'yyyy-mm-dd',
-            startView: 0,
-            todayBtn: false,
-            clearBtn: true,
-            autoclose: true,
-            todayHighlight: true
-        });
-    }
-
-</script>
+    </script>
 {% endblock scripts %}
