@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django.contrib.humanize',
+    'django_celery_results',
     'account',
     'widget_tweaks',
     'django_extensions'
@@ -98,6 +99,16 @@ DATABASES = {
         'PASSWORD': 'qazplm741',
         'HOST': HOST_IP,
         'PORT': '5432',
+    }
+}
+
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_CACHE_BACKEND = 'default'
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': 'django_cache',
     }
 }
 
