@@ -73,7 +73,7 @@
                                         <tr id="not-bills-table-items">
                                             <td colspan="12">
                                                 <div class="alert alert-info text-center">
-                                                    <h3>No Transactions Found ...</h3>
+                                                    <h3>No BRANCH Found ...</h3>
                                                 </div>
                                             </td>
                                         </tr>
@@ -96,7 +96,46 @@
                             </div>
                         </div>
                         <div class="card-body">
-
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>S/N</th>
+                                        <th>Name</th>
+                                        <th>code</th>
+                                        <th>Created</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if offices %}
+                                        
+                                        {% for office in offices %}
+        
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>
+                                                    {{office.name}}
+                                                </td>
+                                                <td>
+                                                    {{office.code}}
+                                                </td>
+                                                <td>{{branch.created}}</td>
+                                                <td>action</td>
+                                            </tr>
+                                            
+                                        {% endfor %}
+                                            
+                                    {% else %}
+                                        <tr id="not-bills-table-items">
+                                            <td colspan="12">
+                                                <div class="alert alert-info text-center">
+                                                    <h3>No Offices Found ...</h3>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>

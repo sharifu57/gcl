@@ -64,6 +64,7 @@ AMOUNT_TYPE = (
 )
 
 class Transaction(MainModel):
+    office = models.ForeignKey("account.Office", on_delete=models.SET_NULL, null=True, blank=True)
     business = models.ForeignKey(Business, on_delete=models.CASCADE, null=True, blank=True)
     amount = models.DecimalField(max_digits=10, decimal_places=2, null=True, blank=True)
     amount_type = models.IntegerField(choices=AMOUNT_TYPE, null=True, blank=True, default=None)

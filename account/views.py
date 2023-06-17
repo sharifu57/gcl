@@ -88,15 +88,12 @@ class DashboardView(MainView):
             business = Business.objects.filter(
                 is_active=True,
                 is_deleted=False,
-                office=office,
-                created__date__range=[start_date, end_date]
+                office=office
+                # created__date__range=[start_date, end_date]
             )
             print("-----print business")
             print(business)
-            
-        else:
-            office == 2
-            print("-----no office")
+      
             
         business_id = business.last().id if business else None
         print("-----lastly id ", business_id)
@@ -118,6 +115,7 @@ class DashboardView(MainView):
             is_active=True,
             is_deleted=False,
             business=business_id,
+            office=office,
             created__date__range=[start_date, end_date]
         ).exclude(
             amount_type = 0
@@ -170,7 +168,8 @@ class AddCapitalView(MainView):
         form = BusinessForm(request.POST)
         office = Office.objects.filter(
             is_active=True, 
-            is_deleted=False
+            is_deleted=False,
+            staff=request.user.id
         ).first()
         
         print("------office:", office)
@@ -220,6 +219,12 @@ class AddNewTransaction(MainView):
             business_id = Business.objects.filter(id=business).first()
         else:
             business_id = None
+            
+        office = Office.objects.filter(
+            is_active=True, 
+            is_deleted=False,
+            staff=request.user.id
+        ).first()
         
         if form.is_valid():
             print("---------valid form")
@@ -229,6 +234,7 @@ class AddNewTransaction(MainView):
             transaction.tag = request.POST['tag']
             transaction.business = business_id
             transaction.staff = request.user
+            transaction.office = office if office else None
             transaction.save()
             transaction.refresh_from_db()
             
@@ -256,8 +262,16 @@ class BranchesView(MainView):
             is_deleted=False
         )
         
+        offices = Office.objects.filter(
+            is_active=True,
+            is_deleted=False
+        ).order_by(
+            'created'
+        )
+        
         context = {
-            'branches': branches
+            'branches': branches,
+            'offices':offices
         }
         return render(request, 'pages/branches.html', context)
     
