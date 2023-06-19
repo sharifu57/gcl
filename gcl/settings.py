@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-w6=34j$uinhem$x%n6&4($w#rl&t-ki^ivz2ecy+(z2n5idk!6
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
-HOST_IP = '192.168.2.46'
+HOST_IP = '192.168.0.108'
 HOST_ADDR = f"http://{HOST_IP}:7005"
 DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:7005/reports"
 
@@ -101,6 +101,15 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'sharifumajid3@gmail.com'  # Your Gmail email address
+EMAIL_HOST_PASSWORD = '57871769@sharif'  # Your Gmail password or an app-specific password
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_CACHE_BACKEND = 'default'

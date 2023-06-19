@@ -19,6 +19,8 @@ import pendulum
 import random
 from account.models import *
 from django.conf import settings
+from django.core.mail import send_mail
+
 
 # Create your views here.
 class MainView(View):
@@ -315,15 +317,6 @@ class NewBranchView(MainView):
             context.append(info)
             return HttpResponse(json.dumps(context))
         
-
-class UsersView(MainView):
-    def get(self, request, *args, **kwargs):
-        users = User.objects.all()
-        
-        context = {
-            'users': users
-        }
-        return render(request, 'pages/users.html', context)
     
         
 class ReportBaseView(MainView):
@@ -340,4 +333,108 @@ class ReportBaseView(MainView):
         }
         return render(request, 'reports/index.html', context)
     
+
+class TransactionsMadeView(MainView):
+    def get(self, request, *args, **kwargs):
+        
+        return render(request, 'pages/transactions.html')
     
+
+class GetTransactionsView(MainView):
+    def get(self, request, *args, **kwargs):
+        user = request.user
+
+        start_date = request.GET.get("start")
+        end_date = request.GET.get("end")
+
+        try:
+            if start_date:
+                start_date = datetime.datetime.strptime(start_date, '%d %B, %Y').date()
+            else:
+                start_date = pendulum.today().start_of('month').date()
+
+            if end_date:
+                end_date = datetime.datetime.strptime(end_date, '%d %B, %Y').date()
+            else:
+                end_date = pendulum.today().end_of('month').date()
+        except ValueError:
+            # Handle the invalid date format here
+            print("Invalid date format provided")
+            start_date = pendulum.today().start_of('month').date()
+            end_date = pendulum.today().end_of('month').date()
+
+        transactions = Transaction.objects.filter(
+            is_active=True,
+            is_deleted=False,
+            staff=user,
+            created__date__range=[start_date, end_date]
+        )
+
+        context = {
+            'transactions': transactions,
+            'start_date': start_date,
+            'end_date': end_date
+        }
+
+        return render(request, 'common/getTransactions.html', context)
+    
+
+class UsersView(MainView):
+    def get(self, request, *args, **kwargs):
+        users = User.objects.all()
+        
+        context = {
+            'users': users
+        }
+        return render(request, 'pages/users.html', context)
+    
+
+def send_registration_email(email):
+    username = None
+    message = f'message sending'
+    send_mail(
+        'Welcome to My Website',
+        message,
+        'from@example.com',
+        [email],
+        fail_silently=False,
+    )
+
+class CreateNewUserView(MainView):
+    def get(self, request, *args, **kwargs):
+        form = RegisterUserForm()
+        
+        context = {
+            'form': form
+        }
+        return render(request,'pages/add_new_user.html', context)
+    
+    def post(self, request, *args, **kwargs):
+        context = list()
+        form = RegisterUserForm(request.POST)
+        if form.is_valid():
+            print("----%%%% its valid")
+            user = User()
+            user.first_name = request.POST['first_name']
+            user.last_name = request.POST['last_name']
+            user.username = request.POST['first_name']
+            user.email = request.POST['email']
+            user.save()
+            user.refresh_from_db()
+            send_registration_email(user.email)
+            
+            info = {
+                'status': True,
+                'message': "Created Successfully"
+            }
+            context.append(info)
+            return HttpResponse(json.dumps(context))
+        else:
+            print("----%%%% its not valid")
+            info = {
+                'status': Failed,
+                'message': "Failed to create"
+            }
+            context.append(info)
+            return HttpResponse(json.dumps(context))
+        

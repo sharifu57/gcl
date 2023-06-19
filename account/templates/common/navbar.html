@@ -1,23 +1,28 @@
 {% load static %}
-<nav class="navbar navbar-expand-lg bg-light card container">
+<nav class="navbar navbar-expand-lg container" style="background-color: #16AD92">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">LOGO</a>
+    <a class="navbar-brand" href="#">
+      <img class="align-center mw-100" src="{% static 'logos/logo_1.png' %}" alt="" style="height: 40px">
+    </a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Home</a>
+          <a class="nav-link active text-uppercase" aria-current="page" href="{% url 'dashboard' %}" style="color: white">Home</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'branches' %}">branches</a>
+          <a class="nav-link text-uppercase" href="{% url 'branches' %}" style="color: white">branches</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'reports' %}">Report</a>
+          <a class="nav-link text-uppercase" href="{% url 'transactions' %}" style="color: white">Transactions</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-uppercase" href="{% url 'reports' %}" style="color: white">Report</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:white">
             {{request.user.username|upper}}
           </a>
           <ul class="dropdown-menu">

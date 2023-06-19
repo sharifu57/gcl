@@ -80,3 +80,24 @@ class BranchForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super(BranchForm, self).__init__(*args, **kwargs)
         self.fields['name'].required = True
+        
+class RegisterUserForm(forms.ModelForm):
+    email = forms.EmailField()
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email']
+        
+    def __init__(self, *args, **kwargs):
+        super(RegisterUserForm, self).__init__(*args, **kwargs)
+        self.fields['first_name'].required = True
+        self.fields['last_name'].required = True
+        self.fields['email'].required = True
+        
+        
+    # def save(self, commit=True):
+    #     user = super().save(commit=False)
+    #     user.set_password(self.cleaned_data['password1'])
+    #     if commit:
+    #         user.save()
+    #     return user
+        

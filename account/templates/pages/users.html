@@ -12,7 +12,7 @@
             <div class="col-md-1 float-lg-end">
                 <div class="text-right">
                     {% if request.user.is_superuser %}
-                        <a href="javascript:" data-href="{% url 'add_new_branch' %}" class="new-branch-link">
+                        <a href="javascript:" data-href="{% url 'add_new_user' %}" class="add-user-link">
                             <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">+ user</button>
                         </a>
                     {% endif %}
@@ -20,8 +20,45 @@
             </div>
         </div>
         <div class="pt-5">
-            
+            <div class="row">
+                {% for user in users %}
+                    <div class="col-md-3 pt-3">
+                        <div class="card card-default card-body">
+                            <p>{{user.id}}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 </div>
 {% endblock content %}
+
+{% block scripts %}
+<script src="/static/assets/js/helpers.js"></script>
+<script>
+    $(function(){
+        $(document).on('click', '.add-user-link', function() {
+        let url = $(this).data('href');
+        let title = "ADD NEW USER";   
+        let columnClass = "col-md-7"
+        let formSelector = ".create-user-form"
+        let containerFluid = false
+
+        ajaxPost(title, url, columnClass, containerFluid, formSelector);
+        })
+    });
+
+    function datePickerSelector() {
+        $('#datepicker').datepicker({
+            format: 'yyyy-mm-dd',
+            startView: 0,
+            todayBtn: false,
+            clearBtn: true,
+            autoclose: true,
+            todayHighlight: true
+        });
+    }
+
+</script>
+{% endblock scripts %}

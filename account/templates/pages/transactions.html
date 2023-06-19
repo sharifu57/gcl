@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+    <div class="container">
+        <div class="section pt-5">
+            <div class="row">
+                <div class="col-md-11">
+                    <p class="h1">Transactions</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-header">
+                <!-- <h5 class="text-bold">LIFE QUOTATIONS</h5> -->
+                <div class="float-left">
+                    <h5 class="text-bold">Performed Transactions</h5>
+                </div>
+                <div class="float-right">
+                    <span class="badge bg-success">{{user_branch}}</span>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="">
+                    <form action="" method="GET" class="search_form">
+                        <div class="row">
+                            <div class="col-md-5">
+                                <label class="col-md-4 control-label">
+                                    <span class="text-semibold" style="font-weight: 600;font-size: 14px;">
+                                        Filter Start Date:
+                                    </span>
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="search" class="form-control"
+                                        placeholder="pick start date of that month" readonly autocomplete="false"
+                                        onmouseenter="date_pick(this)" id="start_date" name="start" required>
+                                </div>
+                            </div>
+                            <div class="col-md-5 mb-5">
+                                <label class="col-md-4 control-label">
+                                    <span class="text-semibold" style="font-weight: 600;font-size: 14px;">
+                                        Filter End Date:
+                                    </span>
+                                </label>
+                                <div class="col-md-8">
+                                    <input type="search" class="form-control"
+                                        placeholder="pick end date of that month" readonly autocomplete="false"
+                                        onmouseenter="date_pick(this)" id="end_date" name="end" required>
+                                </div>
+                            </div>
+                            <div class="col-md-2 mt-4 pull-right">
+                                <button type="submit" class="btn btn-sm btn-primary btn-labeled btn-rounded submit_btn"
+                                    style="width: 100%;">
+                                    <b><i class="icon-check"></i></b>
+                                    Search
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div id="noSheetsUnreinsuredPoliciesData">
+        
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+<script src="/static/assets/js/helpers.js"></script>
+<script>
+    
+    $(document).ready(function(){
+        url = `{% url 'get_filtered_transactions' %}`;
+        getClaimBundleDetail(url);
+    })
+
+    $(document).on("submit",".search_form",function(e){
+        e.preventDefault();
+        let start_date = $('.search_form input#start_date').val();
+        let end_date = $('.search_form input#end_date').val();
+
+        url = `{% url 'get_filtered_transactions' %}` + `?start=` + start_date + `&end=` + end_date;
+        getClaimBundleDetail(url);
+    })
+    
+    function getClaimBundleDetail(url) {
+        let loader2 = `<div class="col-md-12 text-center search-loader text-success-800" style="height:200px;top: 20px; position: relative;"><center><span><i class="icon-spinner2" style="font-size:50px"></i></span><br> Loading data please wait...</center></div>`;
+        $('#noSheetsUnreinsuredPoliciesData').html(loader2);
+        
+        fetch(url).then(function(response){
+            response.text().then(function(data){
+                $("#noSheetsUnreinsuredPoliciesData").html(data);
+            });
+        }).catch(function(err){
+            $("#noSheetsUnreinsuredPoliciesData").html("OOPS SOMETHING WENT WRONG");
+        });       
+    }
+
+    function date_pick(selector) {
+        $(selector).datepicker({
+            format: "d MM, yyyy",
+            startView: 0,
+            todayBtn: false,
+            clearBtn: false,
+            autoclose: true,
+            todayHighlight: true,
+            startDate: new Date('{{ system_start_date }}')
+        });
+    }
+</script>
+
+{% endblock scripts %}
