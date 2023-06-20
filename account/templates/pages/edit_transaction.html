@@ -1,0 +1,45 @@
+<form class="update-transaction-form card-body" action="{% url 'edit_transaction' business %}" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% load widget_tweaks %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 pt-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="" style="font-size: 13px;">AMOUNT</label>
+                            {% render_field form.amount class="form-control" style="border-radius: 20px" %}
+                            {{form.amount.errors}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 pt-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="" style="font-size: 13px;">AMOUNT TYPE</label>
+                            {% render_field form.amount_type class="form-control" style="border-radius: 20px" %}
+                            {{form.amount_type.errors}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 pt-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="" style="font-size: 13px;">TAG</label>
+                            {% render_field form.tag class="form-control" style="border-radius: 20px" %}
+                            {{form.tag.errors}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</form>

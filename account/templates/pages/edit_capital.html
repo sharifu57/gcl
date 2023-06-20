@@ -1,0 +1,34 @@
+
+<form class="update-capital-form card-body" action="{% url 'edit_capital' business.id %}" method="post" enctype="multipart/form-data" novalidate>
+    {% csrf_token %}
+    {% load widget_tweaks %}
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-12 pt-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="" style="font-size: 13px;">Capital</label>
+                            {% render_field form.capital class="form-control" style="border-radius: 20px" %}
+                            {{form.capital.errors}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 pt-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label for="" style="font-size: 13px;">Office</label>
+                            {% render_field form.office class="form-control" style="border-radius: 20px" %}
+                            {{form.office.errors}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+

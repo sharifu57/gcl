@@ -1,0 +1,132 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+    <div class="container">
+        <div class="section pt-5">
+            <div class="row">
+                <div class="col-md-11">
+                    <p class="h1">Capitals</p>
+                </div>
+                <div class="col-md-1 float-lg-end">
+                    <div class="text-right">
+                        {% if request.user.is_superuser %}
+                            <a href="javascript:" data-href="{% url 'add_new_capital' %}" class="new-capital-link">
+                                <button class="btn btn-primary me-md-2" type="button" style="border-radius: 20px;">Capital</button>
+                            </a>
+                        {% endif %}
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pt-5">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="card card-default">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-md-11">
+                                    <h5>Branches</h5>
+                                </div>
+                                <div class="col-md-2">
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>S/N</th>
+                                        <th>Name</th>
+                                        <th>offices</th>
+                                        <th>Added By</th>
+                                        <th>Created</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% if businesses %}
+                                        
+                                        {% for business in businesses %}
+        
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>
+                                                    {{business.capital}}
+                                                </td>
+                                                <td>
+                                                    {{business.office.name}}
+                                                </td>
+                                                <td>
+                                                    {{business.user.username}}
+                                                </td>
+                                                <td>{{business.created}}</td>
+                                                <td>
+                                                    <div class="btn-group dropstart">
+                                                        <a class=" btn-default dropdown-toggle text-center pl-3"   data-bs-toggle="dropdown" href="#" aria-expanded="false" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                                                            ...
+                                                        </a>
+                    
+                                                        <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item update-capital-link" href="javascript:;" data-href="{% url 'edit_capital' business.id %}"><span style="margin-right: 6px;"><i class="fa-solid fa-pen-to-square"></i></span> Edit Details</a></li>
+                                                            <li style="color: red;"><a href="javascript:;" data-href="{% url 'remove_capital' business.id %}"
+                                                                class="dropdown-item remove-capital-link" style="color: red;"><span style="margin-right: 6px;">
+                                                                <i class="fa-solid fa-trash-can"></i></span> Remove</a>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                    
+                                                </td>
+                                            </tr>
+                                            
+                                        {% endfor %}
+                                            
+                                    {% else %}
+                                        <tr id="not-bills-table-items">
+                                            <td colspan="12">
+                                                <div class="alert alert-info text-center">
+                                                    <h3>No BRANCH Found ...</h3>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+    <script src="/static/assets/js/helpers.js"></script>
+    <script>
+        $(function(){
+            $(document).on('click', '.update-capital-link', function() {
+            let url = $(this).data('href');
+            let title = "UPDATE CAPITAL";   
+            let columnClass = "col-md-7"
+            let formSelector = ".update-capital-form"
+            let containerFluid = false
+    
+            ajaxPost(title, url, columnClass, containerFluid, formSelector);
+            })
+        });
+
+        $(function(){
+            $(document).on("click", ".remove-capital-link", function(e) {
+                let url = $(this).data('href');
+                let title = "Delete Capital";
+                let content = "Are you sure you want to delete this?";
+            
+                ajaxConfirm(title, url, content);
+            });
+        })
+
+    </script>
+{% endblock scripts %}

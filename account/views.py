@@ -200,6 +200,57 @@ class AddCapitalView(MainView):
             context.append(info)
             return HttpResponse(json.dumps(info)) 
         
+
+class EditCapitalView(MainView):
+    def get(self, request, *args, **kwargs):
+        business_id=self.kwargs.get("business")
+        business = Business.objects.filter(id=business_id).first()
+        form = BusinessForm(instance=business)
+        
+        context = {
+            'form':form,
+            'business':business
+        }
+        return render(request,'pages/edit_capital.html', context)
+        
+        
+    def post(self, request, *args, **kwargs):
+        context = list()
+        business_id=self.kwargs.get("business")
+        business = Business.objects.filter(id=business_id).first()
+        
+        form = BusinessForm(request.POST, instance=business)
+        
+        if form.is_valid():
+            form.save()
+            info = {
+                'status': True,
+                'message': "Successfully Updated"
+            }
+            context.append(info)
+            return HttpResponse(json.dumps(info))
+        
+        else:
+            info = {
+                'status': False,
+                'message': "Failed to Update, Please fill the empty fields"
+            }
+            context.append(info)
+            return HttpResponse(json.dumps(info))
+        
+        
+class RemoveCapitalView(MainView):
+    def get(self, request, *args, **kwargs):
+        business_id=self.kwargs.get("business")
+        business = Business.objects.filter(id=business_id).first()
+        business.is_active=False
+        business.save()
+        info = {
+            'status': True,
+            'message': "Successfully Removed"
+        }
+        return HttpResponse(json.dumps(info))
+        
 class AddNewTransaction(MainView):
     def get(self, request, *args, **kwargs):
         form = TransactionForm()
@@ -318,7 +369,6 @@ class NewBranchView(MainView):
             return HttpResponse(json.dumps(context))
         
     
-        
 class ReportBaseView(MainView):
     def get(self, request, *args, **kwargs):
         
@@ -377,6 +427,18 @@ class GetTransactionsView(MainView):
         }
 
         return render(request, 'common/getTransactions.html', context)
+    
+class CapitalBusinessView(MainView):
+    def get(self, request, *args, **kwargs):
+        businesses = Business.objects.filter(
+            is_active=True,
+            is_deleted=False,
+        ).order_by('-created')[:10]
+        
+        context = {
+            'businesses': businesses
+        }
+        return render(request, 'pages/capitals.html', context)
     
 
 class UsersView(MainView):
@@ -438,3 +500,78 @@ class CreateNewUserView(MainView):
             context.append(info)
             return HttpResponse(json.dumps(context))
         
+class EditCapitalView(MainView):
+    def get(self, request, *args, **kwargs):
+        business_id=self.kwargs.get("business")
+        business = Business.objects.filter(id=business_id).first()
+        form = BusinessForm(instance=business)
+        
+        context = {
+            'form':form,
+            'business':business
+        }
+        return render(request,'pages/edit_capital.html', context)
+        
+        
+    def post(self, request, *args, **kwargs):
+        context = list()
+        business_id=self.kwargs.get("business")
+        business = Business.objects.filter(id=business_id).first()
+        
+        form = BusinessForm(request.POST, instance=business)
+        
+        if form.is_valid():
+            form.save()
+            info = {
+                'status': True,
+                'message': "Successfully Updated"
+            }
+            context.append(info)
+            return HttpResponse(json.dumps(info))
+        
+        else:
+            info = {
+                'status': False,
+                'message': "Failed to Update, Please fill the empty fields"
+            }
+            context.append(info)
+            return HttpResponse(json.dumps(info))
+        
+        
+class RemoveCapitalView(MainView):
+    def get(self, request, *args, **kwargs):
+        business_id=self.kwargs.get("business")
+        business = Business.objects.filter(id=business_id).first()
+        business.is_active=False
+        business.save()
+        info = {
+            'status': True,
+            'message': "Successfully Removed"
+        }
+        return HttpResponse(json.dumps(info))
+
+class EditTransactionView(MainView):
+    def get(self, request, *args, **kwargs):
+        transaction_id=self.kwargs.get("transaction")
+        transaction = Transaction.objects.filter(id=transaction_id).first()
+        form=TransactionForm(instance=transaction)
+        
+        context = {
+            'transaction': transaction,
+            'form':form
+        }
+        return render(request, 'pages/edit_transaction.html', context)
+    
+class RemoveTransactionView(MainView):
+    def get(self, request):
+        transaction_id=self.kwargs.get("transaction")
+        transaction = Transaction.objects.filter(id=transaction_id).first()
+        print("---------here transaction")
+        print(transaction)
+        transaction.is_active=False
+        transaction.save()
+        info = {
+            'status': True,
+            'message': "Successfully deleted"
+        }
+        return HttpResponse(json.dumps())
