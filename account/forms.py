@@ -18,10 +18,10 @@ class AuthenticationForm(forms.ModelForm):
         password = str(self.cleaned_data.get("password")).strip().replace(" ", "").lower()
 
         if User.objects.filter(Q(username=username)| Q(email=username) | Q(password = password)).exists():
-            user_login = User.objects.filter(Q(username=username)|Q(email=username)).first()
+            user_login = User.objects.filter(Q(username__icontains=username)|Q(email__icontains=username)).first()
             user = authenticate(username = user_login.username, password = password)
             if not user or not user.is_active:
-                raise forms.ValidationError("username or password not active")
+                raise forms.ValidationError("Invalid User details")
             
         else:
             raise forms.ValidationError("Invalid username or password")
@@ -69,7 +69,7 @@ class TransactionForm(forms.ModelForm):
         super(TransactionForm, self).__init__(*args, **kwargs)
         self.fields['amount'].required = True
         self.fields['amount_type'].required = True
-        self.fields['tag'].required = True
+        # self.fields['tag'].required = True
     
 
 class BranchForm(forms.ModelForm):
@@ -85,13 +85,14 @@ class RegisterUserForm(forms.ModelForm):
     email = forms.EmailField()
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email']
+        fields = ['first_name', 'last_name', 'email', 'username']
         
     def __init__(self, *args, **kwargs):
         super(RegisterUserForm, self).__init__(*args, **kwargs)
         self.fields['first_name'].required = True
         self.fields['last_name'].required = True
         self.fields['email'].required = True
+        self.fields['username'].required = True
         
         
     # def save(self, commit=True):

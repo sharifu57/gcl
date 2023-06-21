@@ -1,0 +1,75 @@
+{% load static %}
+{% load humanize %}
+
+<div class="show-transactions-form">
+    <table class="table table-hover">
+        <thead>
+            <tr>
+                <th>S/N</th>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Tag</th>
+                <th>Created</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if transactions %}
+                
+                {% for transaction in transactions %}
+    
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>
+                            {{transaction.amount|intcomma}}
+                        </td>
+                        <td>
+                            {% if transaction.amount_type == 0 %}
+                                <p>CASH ON HAND</p>
+                            {% elif transaction.amount_type == 1 %}
+                                <p>M-PESA SUPER</p>
+                            {% elif transaction.amount_type == 2 %}
+                                <p>M-PESA MINOR</p>
+                            {% elif transaction.amount_type == 3 %}
+                                <p>TIGO-PESA SUPER</p>
+                            {% elif transaction.amount_type == 4 %}
+                                <p>TIGO-PESA MINOR</p>
+                            {% elif transaction.amount_type == 5 %}
+                                <p>AIRTEL MONEY SUPER</p>
+                            {% elif transaction.amount_type == 6 %}
+                                <p>AIRTEL MONEY MINOR</p>
+                            {% elif transaction.amount_type == 7 %}
+                                <p>HALO PESA SUPER</p>
+                            {% elif transaction.amount_type == 8 %}
+                                <p>HALO PESA MINOR</p>
+                            {% elif transaction.amount_type == 9 %}
+                                <p>PBZ</p>
+                            {% elif transaction.amount_type == 10 %}
+                                <p>NMB</p>
+                            {% else %}
+                                <p>CRDB</p>
+                            {% endif %}
+                        </td>
+                        {% comment %} <td>
+                            {% if transaction.tag == 1 %}
+                                <p style="color:green">IN</p>
+                            {% else %}
+                                <p style="color:red">OUT</p>
+                            {% endif %}
+                        </td> {% endcomment %}
+                        <td>{{transaction.created}}</td>
+                    </tr>
+                    
+                {% endfor %}
+                    
+            {% else %}
+                <tr id="not-bills-table-items">
+                    <td colspan="12">
+                        <div class="alert alert-info text-center">
+                            <h3>No Transactions Found ...</h3>
+                        </div>
+                    </td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>

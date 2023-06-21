@@ -71,7 +71,5 @@ class Transaction(MainModel):
     tag = models.IntegerField(choices=((1, 'IN'), (2, 'OUT')), null=True, blank=True)
     staff = models.ForeignKey(User, on_delete=models.CASCADE, null=True, blank=True)
     
-    def __str__(self):
-        
-        return self.staff.id
+
     

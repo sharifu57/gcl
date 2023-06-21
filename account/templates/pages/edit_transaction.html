@@ -1,4 +1,4 @@
-<form class="update-transaction-form card-body" action="{% url 'edit_transaction' business %}" method="post" enctype="multipart/form-data" novalidate>
+<form class="update-transaction-form card-body" action="{% url 'edit_transaction' transaction.id %}" method="post" enctype="multipart/form-data" novalidate>
     {% csrf_token %}
     {% load widget_tweaks %}
 

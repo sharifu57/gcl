@@ -20,4 +20,5 @@ urlpatterns = [
     path('remove_capital/<int:business>', views.RemoveCapitalView.as_view(), name="remove_capital"),
     path('edit_transaction/<int:transaction>', views.EditTransactionView.as_view(), name="edit_transaction"),
     path('remove_transaction/<int:transaction>', views.RemoveTransactionView.as_view(), name="remove_transaction"),
+    path('show_transaction/<int:business>', views.ShowTransactionView.as_view(), name="show_transaction"),
 ]

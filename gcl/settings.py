@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+from django.urls import reverse_lazy
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,7 +28,7 @@ SECRET_KEY = 'django-insecure-w6=34j$uinhem$x%n6&4($w#rl&t-ki^ivz2ecy+(z2n5idk!6
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
-HOST_IP = '192.168.0.108'
+HOST_IP = '192.168.2.46'
 HOST_ADDR = f"http://{HOST_IP}:7005"
 DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:7005/reports"
 
@@ -129,6 +130,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 
 # Specify the URL to redirect to after session expiration
 LOGIN_URL = '/login/'
+LOGOUT_URL = reverse_lazy('logout')
 
 
 # Password validation

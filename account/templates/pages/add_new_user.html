@@ -34,6 +34,18 @@
                 <div class="row">
                     <div class="col-md-12">
                         <div class="form-group">
+                            <label for="" style="font-size: 13px;">Username</label>
+                            {% render_field form.username class="form-control" style="border-radius: 20px" %}
+                            {{form.username.errors}}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-12 pt-3">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
                             <label for="" style="font-size: 13px;">Email</label>
                             {% render_field form.email class="form-control" style="border-radius: 20px" %}
                             {{form.email.errors}}

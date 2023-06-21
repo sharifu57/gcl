@@ -20,6 +20,7 @@ import random
 from account.models import *
 from django.conf import settings
 from django.core.mail import send_mail
+import string
 
 
 # Create your views here.
@@ -52,7 +53,6 @@ class AuthenticationView(View):
         form = AuthenticationForm(request.POST)
 
         if form.is_valid():
-            print("***valid")
             user = form.login(request)
             if user:
                 login(request, user)
@@ -63,7 +63,6 @@ class AuthenticationView(View):
                 return redirect('login')
                 
         else:
-            print("**not valid")
             messages.error(request, 'failed to Login')
         
             context = {
@@ -85,20 +84,14 @@ class DashboardView(MainView):
         balance = 0
         
         if office:
-            print("----there is office")
-            print(office)
             business = Business.objects.filter(
                 is_active=True,
                 is_deleted=False,
                 office=office
                 # created__date__range=[start_date, end_date]
             )
-            print("-----print business")
-            print(business)
-      
-            
+
         business_id = business.last().id if business else None
-        print("-----lastly id ", business_id)
         
         cash_amount = business.aggregate(total=Sum('cash_capital'))['total'] if business else 0
         float_amount = business.aggregate(total=Sum('float_capital'))['total'] if business else 0
@@ -173,8 +166,6 @@ class AddCapitalView(MainView):
             is_deleted=False,
             staff=request.user.id
         ).first()
-        
-        print("------office:", office)
         
         if form.is_valid():
             business = Business()
@@ -267,8 +258,6 @@ class AddNewTransaction(MainView):
         business = self.kwargs.get('business')
         
         if business:
-            print("------here business")
-            print(business)
             business_id = Business.objects.filter(id=business).first()
         else:
             business_id = None
@@ -280,11 +269,10 @@ class AddNewTransaction(MainView):
         ).first()
         
         if form.is_valid():
-            print("---------valid form")
             transaction = Transaction()
             transaction.amount = request.POST['amount']
             transaction.amount_type = request.POST['amount_type']
-            transaction.tag = request.POST['tag']
+            # transaction.tag = request.POST['tag']
             transaction.business = business_id
             transaction.staff = request.user
             transaction.office = office if office else None
@@ -299,7 +287,6 @@ class AddNewTransaction(MainView):
             return HttpResponse(json.dumps(info))
     
         else:
-            print("--------invalid form")
             info = {
                 'status': False,
                 'message': "Failed to create"
@@ -334,9 +321,7 @@ def generate_branch_code():
 
 class NewBranchView(MainView):
     def get(self, request, *args, **kwargs):
-        print("-------**** get form")
         form = BranchForm()
-        print("-------*** end get form")
         context = {
             'form': form
         }
@@ -346,7 +331,6 @@ class NewBranchView(MainView):
         context = list()
         form = BranchForm(request.POST)
         if form.is_valid():
-            print("----------isvalid")
             branch = Branch()
             branch.name = request.POST['name']
             branch.code = generate_branch_code()
@@ -360,7 +344,6 @@ class NewBranchView(MainView):
             context.append(info)
             return HttpResponse(json.dumps(context))
         else:
-            print("-----not valid")
             info = {
                 'status': False,
                 'message': "Failed to create"
@@ -461,6 +444,13 @@ def send_registration_email(email):
         [email],
         fail_silently=False,
     )
+    
+    
+def generate_password():
+    length=10
+    characters = string.ascii_letters + string.digits
+    password = ''.join(random.choice(characters) for _ in range(length))
+    return password
 
 class CreateNewUserView(MainView):
     def get(self, request, *args, **kwargs):
@@ -475,30 +465,29 @@ class CreateNewUserView(MainView):
         context = list()
         form = RegisterUserForm(request.POST)
         if form.is_valid():
-            print("----%%%% its valid")
             user = User()
             user.first_name = request.POST['first_name']
             user.last_name = request.POST['last_name']
-            user.username = request.POST['first_name']
+            user.username = request.POST['username']
             user.email = request.POST['email']
+            user.password = generate_password()
+            pwd = user.password
             user.save()
             user.refresh_from_db()
-            send_registration_email(user.email)
             
             info = {
                 'status': True,
-                'message': "Created Successfully"
+                'message': "Created Successfully",
             }
             context.append(info)
-            return HttpResponse(json.dumps(context))
+            return HttpResponse(json.dumps(info))
         else:
-            print("----%%%% its not valid")
             info = {
                 'status': Failed,
                 'message': "Failed to create"
             }
             context.append(info)
-            return HttpResponse(json.dumps(context))
+            return HttpResponse(json.dumps(info))
         
 class EditCapitalView(MainView):
     def get(self, request, *args, **kwargs):
@@ -562,16 +551,53 @@ class EditTransactionView(MainView):
         }
         return render(request, 'pages/edit_transaction.html', context)
     
-class RemoveTransactionView(MainView):
-    def get(self, request):
+    def post(self, request, *args, **kwargs):
+        context = list()
         transaction_id=self.kwargs.get("transaction")
         transaction = Transaction.objects.filter(id=transaction_id).first()
-        print("---------here transaction")
-        print(transaction)
+        form=TransactionForm(request.POST,instance=transaction)
+        
+        if form.is_valid():
+            form.save()
+            info = {
+                'status': True,
+                'message': "Successfully updated Information"
+            }
+            
+            context.append(info)
+        else:
+            info = {
+                'status': False,
+                'message': "Failed to update details"
+            }
+            context.append(info)
+        return HttpResponse(json.dumps(context))
+    
+class RemoveTransactionView(MainView):
+    def get(self, request,  *args, **kwargs):
+        transaction_id=self.kwargs.get("transaction")
+        transaction = Transaction.objects.filter(id=transaction_id).first()
         transaction.is_active=False
         transaction.save()
         info = {
             'status': True,
             'message': "Successfully deleted"
         }
-        return HttpResponse(json.dumps())
+        return HttpResponse(json.dumps(info))
+    
+class ShowTransactionView(MainView):
+    def get(self, request, *args, **kwargs):
+        business_id = self.kwargs.get("business")
+        business = Business.objects.filter(id=business_id).first()
+        transactions = Transaction.objects.filter(
+            business=business,
+            is_active=True,
+            is_deleted=False
+        )
+        
+        context = {
+            'transactions': transactions,
+            'business': business
+        }
+        
+        return render(request,'pages/show_transactions.html', context)

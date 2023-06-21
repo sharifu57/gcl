@@ -59,7 +59,7 @@
                                 <th>S/N</th>
                                 <th>Amount</th>
                                 <th>Type</th>
-                                <th>Tag</th>
+                                {% comment %} <th>Tag</th> {% endcomment %}
                                 <th>Created</th>
                                 <th>Action</th>
                             </tr>
@@ -72,13 +72,7 @@
                                     <tr>
                                         <td>{{ forloop.counter }}</td>
                                         <td>
-                                            {% if transaction.tag == 1 %}
-                                                <p>{{transaction.amount|intcomma}}</p>
-                                            {% else %}
-                                                <p style="color:red">-{{transaction.amount|intcomma}}</p>
-                                            {% endif %}
-                                            
-                                            
+                                            {{transaction.amount|intcomma}}
                                         </td>
                                         <td>
                                             {% if transaction.amount_type == 0 %}
@@ -107,22 +101,22 @@
                                                 <p>CRDB</p>
                                             {% endif %}
                                         </td>
-                                        <td>
+                                        {% comment %} <td>
                                             {% if transaction.tag == 1 %}
                                                 <p style="color:green">IN</p>
                                             {% else %}
                                                 <p style="color:red">OUT</p>
                                             {% endif %}
-                                        </td>
+                                        </td> {% endcomment %}
                                         <td>{{transaction.created}}</td>
                                         <td>
                                             <div class="btn-group dropstart">
                                                 <a class=" btn-default dropdown-toggle text-center pl-3"   data-bs-toggle="dropdown" href="#" aria-expanded="false" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
-                                                    ...
+                                                    click
                                                 </a>
             
                                                 <ul class="dropdown-menu">
-                                                    <li><a class="dropdown-item update-transaction-link" href="javascript:;" data-href="{% url 'edit_transaction' transaction.id %}"><span style="margin-right: 6px;"><i class="fa-solid fa-pen-to-square"></i></span> Edit Details</a></li>
+                                                    {% comment %} <li><a class="dropdown-item update-transaction-link" href="javascript:;" data-href="{% url 'edit_transaction' transaction.id %}"><span style="margin-right: 6px;"><i class="fa-solid fa-pen-to-square"></i></span> Edit Details</a></li> {% endcomment %}
                                                     <li style="color: red;"><a href="javascript:;" data-href="{% url 'remove_transaction' transaction.id %}"
                                                         class="dropdown-item remove-transaction-link" style="color: red;"><span style="margin-right: 6px;">
                                                         <i class="fa-solid fa-trash-can"></i></span> Remove</a>

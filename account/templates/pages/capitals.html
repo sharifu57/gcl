@@ -71,6 +71,7 @@
                                                         </a>
                     
                                                         <ul class="dropdown-menu">
+                                                            <li><a class="dropdown-item show-transactions-link" href="javascript:;" data-href="{% url 'show_transaction' business.id %}"><span style="margin-right: 6px;"><i class="fa-solid fa-pen-to-square"></i></span> Transactions</a></li>
                                                             <li><a class="dropdown-item update-capital-link" href="javascript:;" data-href="{% url 'edit_capital' business.id %}"><span style="margin-right: 6px;"><i class="fa-solid fa-pen-to-square"></i></span> Edit Details</a></li>
                                                             <li style="color: red;"><a href="javascript:;" data-href="{% url 'remove_capital' business.id %}"
                                                                 class="dropdown-item remove-capital-link" style="color: red;"><span style="margin-right: 6px;">
@@ -117,7 +118,18 @@
             ajaxPost(title, url, columnClass, containerFluid, formSelector);
             })
         });
-
+        $(function(){
+            $(document).on('click', '.show-transactions-link', function() {
+            let url = $(this).data('href');
+            let title = "SHOW TRANSACTIONS";   
+            let columnClass = "col-md-7"
+            let formSelector = ".show-transactions-form"
+            let containerFluid = false
+    
+            ajaxPost(title, url, columnClass, containerFluid, formSelector);
+            })
+        });
+        
         $(function(){
             $(document).on("click", ".remove-capital-link", function(e) {
                 let url = $(this).data('href');
