@@ -73,14 +73,9 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     # 'account.middleware.SessionExpirationMiddleware',
     'account.middleware.SessionTimeoutMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django_session_timeout.middleware.SessionTimeoutMiddleware',
 ]
 
 ROOT_URLCONF = 'gcl.urls'
-# SESSION_EXPIRE_SECONDS = 3600
-# SESSION_EXPIRE_AFTER_LAST_ACTIVITY = True
-# SESSION_TIMEOUT_REDIRECT = 'login'
 
 TEMPLATES = [
     {
@@ -141,12 +136,15 @@ CACHES = {
     }
 }
 
+# Set the session expiration time
+SESSION_COOKIE_AGE = 3600  # 30 minutes in seconds
+SESSION_EXPIRE_SECONDS = 3600 # 5 minutes expire
+SESSION_EXPIRE_AT_BROWSER_CLOSE=True
 
 
-
-# # Specify the URL to redirect to after session expiration
-# LOGIN_URL = '/login/'
-# LOGOUT_URL = reverse_lazy('logout')
+# Specify the URL to redirect to after session expiration
+LOGIN_URL = '/login/'
+LOGOUT_URL = reverse_lazy('logout')
 
 
 # Password validation
