@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import Group, User
+from django.dispatch import receiver
 
 # Create your models here.
 class MainModel(models.Model):
@@ -39,7 +40,7 @@ class Business(MainModel):
 
 class Office(MainModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True)
-    staff = models.ManyToManyField(User, null=True, blank=True)
+    staff = models.ManyToManyField(User, null=True, blank=True, related_name="offices")
     name = models.CharField(max_length=200, null=True, blank=True)
     code = models.CharField(max_length=200, null=True, blank=True)
     
@@ -47,6 +48,16 @@ class Office(MainModel):
         
         return self.name
     
+    # @receiver(models.signals.post_save, sender=User)
+    # def create_default_office(sender, instance, created, **kwargs):
+    #     if created and not instance.offices.exists():
+    #         default_office = Office.objects.get(name='kinondoni')
+    #         default_office.staff.add(instance)
+    
+    # @receiver(models.signals.post_save, sender=User)
+    # def save_user_office(sender, instance, **kwargs):
+    #     instance.offices.first().save()
+
 
 AMOUNT_TYPE = (
     (0, 'CASH ON HAND'),

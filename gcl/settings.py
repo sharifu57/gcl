@@ -27,10 +27,24 @@ SECRET_KEY = 'django-insecure-w6=34j$uinhem$x%n6&4($w#rl&t-ki^ivz2ecy+(z2n5idk!6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 ALLOWED_HOSTS = ['*']
+PRODUCTION = False
 
-HOST_IP = '137.184.229.14'
-HOST_ADDR = f"http://{HOST_IP}:7005"
-DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:7005/reports"
+if PRODUCTION:
+    HOST_IP = '137.184.229.14'
+    HOST_ADDR = f"http://{HOST_IP}:7005"
+    DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:7005/reports"
+    STATE_INDEX = 1
+    
+else:
+    HOST_IP = '192.168.96.1'
+    HOST_ADDR = f"http://{HOST_IP}:7005"
+    DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:7005/reports"
+    STATE_INDEX = 0
+    
+
+STATES = ["uat", "production"]
+SYSTEM_STATE = STATES[STATE_INDEX]
+    
 
 
 # Application definition

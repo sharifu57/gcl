@@ -90,6 +90,16 @@ class DashboardView(MainView):
                 office=office
                 # created__date__range=[start_date, end_date]
             )
+        
+        else:
+            office = Office.objects.get(id=1)
+            business = Business.objects.filter(
+                is_active=True,
+                is_deleted=False,
+                office=office
+                # created__date__range=[start_date, end_date]
+            )
+            
 
         business_id = business.last().id if business else None
         
