@@ -20,14 +20,58 @@
             </div>
         </div>
         <div class="pt-5">
-            <div class="row">
-                {% for user in users %}
-                    <div class="col-md-3 pt-3">
-                        <div class="card card-default card-body">
-                            <p>{{user.id}}</p>
-                        </div>
+            <div class="card-body">
+        
+                {% if users %}
+                    
+                    <div class="row">
+                        
+                        {% for user in users %}
+                            <div class="col-md-3 pb-3">
+                                <div class="card card-body card-default">
+                                    <div class="">
+                                        
+                                        {% if user.is_active %}
+                                            <span class="badge bg-primary">Active</span>
+                                        {% else %}
+                                            <span class="badge bg-danger">Blocked</span>
+                                        {% endif %}
+                                            
+                                    </div>
+                                    
+                                    {% comment %} {% if request.user.is_superuser %}
+                                        
+                                        {% if user.is_active == True %}
+                                            <span><a href="javascript:" data-href=""  class="active block-user-link" href="" >block</a></span>
+                                        {% else %}
+                                            <span><a href="javascript:" data-href=""  class="active block-user-link" href="" >Unblock</a></span>
+                                        {% endif %}
+                                            
+                                    {% endif %} {% endcomment %}
+                                        
+                                    <div class="text-center">
+                                        <img class="avatar rounded-circle text-center img-fluid w-90" alt="Image placeholder" src="/static/assets/img/team/profile-picture-3.jpg" style="width: 80px; height: 80px;">
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="text-center">
+                                            <p class="text-bold">{{user.get_full_name|title}}</p>
+                                        </div>
+                                        <div class="text-center">
+                                            {% for role  in user.groups.all|slice:":2" %}
+                                                <span class="badge bg-success">{{role.name}}</span>
+                                            {% endfor %}    
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                            
                     </div>
-                {% endfor %}
+                        
+                {% else %}
+            
+                {% endif %}
+                    
             </div>
         </div>
     </div>
