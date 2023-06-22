@@ -40,7 +40,7 @@ class Business(MainModel):
 
 class Office(MainModel):
     branch = models.ForeignKey(Branch, on_delete=models.CASCADE, null=True, blank=True)
-    staff = models.ManyToManyField(User, null=True, blank=True, related_name="offices")
+    staff = models.ManyToManyField(User, related_name="offices")
     name = models.CharField(max_length=200, null=True, blank=True)
     code = models.CharField(max_length=200, null=True, blank=True)
     
