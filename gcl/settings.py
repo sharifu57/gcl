@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-w6=34j$uinhem$x%n6&4($w#rl&t-ki^ivz2ecy+(z2n5idk!6
 DEBUG = True
 ALLOWED_HOSTS = ['*']
 
-HOST_IP = '192.168.2.46'
+HOST_IP = '137.184.229.14'
 HOST_ADDR = f"http://{HOST_IP}:7005"
 DOCUMENT_SYSTEM_IP = f"http://{HOST_IP}:7005/reports"
 
