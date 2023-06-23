@@ -15,15 +15,21 @@
         <li class="nav-item">
           <a class="nav-link text-uppercase" href="{% url 'branches' %}" style="color: white">branches</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link text-uppercase" href="{% url 'capitals' %}" style="color: white">Capitals</a>
-        </li>
+        
+        {% if request.user.is_superuser %}
+          <li class="nav-item">
+            <a class="nav-link text-uppercase" href="{% url 'capitals' %}" style="color: white">Capitals</a>
+          </li>
+        {% endif %}
+          
         <li class="nav-item">
           <a class="nav-link text-uppercase" href="{% url 'transactions' %}" style="color: white">Transactions</a>
         </li>
+        {% if request.user.is_superuser %}
         <li class="nav-item">
           <a class="nav-link text-uppercase" href="{% url 'reports' %}" style="color: white">Report</a>
         </li>
+        {% endif %}
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color:white">
             {{request.user.username|upper}}
@@ -34,7 +40,6 @@
                 <a class="dropdown-item" href="{% url 'system_users' %}">Users</a>
               {% endif %}
             </li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'logout' %}" style="color: red">Log Out</a></li>
           </ul>

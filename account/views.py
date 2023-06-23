@@ -171,16 +171,21 @@ class AddCapitalView(MainView):
     def post(self, request, *args):
         context = list()
         form = BusinessForm(request.POST)
-        office = Office.objects.filter(
-            is_active=True, 
-            is_deleted=False,
-            staff=request.user.id
-        ).first()
+        # office = Office.objects.filter(
+        #     is_active=True, 
+        #     is_deleted=False
+        # )
+        office_id = request.POST['office']
         
+        print("******** find officce")
+        print(office_id)
         if form.is_valid():
             business = Business()
             business.capital = request.POST['capital']
-            business.office = office if office else None
+            if office_id:
+                business.office = Office.objects.filter(id=office_id).first()
+            else:
+                business.office = None
             business.user = request.user
             business.save()
             business.refresh_from_db()
